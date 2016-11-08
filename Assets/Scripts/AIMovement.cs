@@ -9,6 +9,9 @@ public class AIMovement : MonoBehaviour {
     private List<GameObject> m_destructTowers;
     private List<GameObject> m_waypoints;
 
+    ObjectDistance m_closestWaypoint;
+    ObjectDistance m_closestTower;
+
     private NavMeshAgent m_enemyAgent;
     private Animator m_animator;
 
@@ -36,9 +39,8 @@ public class AIMovement : MonoBehaviour {
 
     void Update() {
         TheAiState();
-
-        if(m_enemyAgent.speed != m_enemyStats.m_speed)
-            m_enemyAgent.speed = m_enemyStats.m_speed;
+        /*if(m_enemyAgent.speed != m_enemyStats.m_speed)
+            m_enemyAgent.speed = m_enemyStats.m_speed;*/
     }
 
     void TheAiState() {
@@ -46,12 +48,14 @@ public class AIMovement : MonoBehaviour {
         switch (m_currentState) {
             case AiState.Searching:
 
-                ObjectDistance waypoint = GetClosestObject(m_waypoints, m_curWayPoint);
-                CopyList(ref m_destructTowers, waypoint.Object.GetComponent<WayPoint>().GetTowerList);
-                ObjectDistance tower = GetClosestObject(m_destructTowers, m_curTower);
 
-                m_curWayPoint = waypoint.Object;
-                m_curTower = tower.Object;
+
+                m_closestWaypoint = GetClosestObject(m_waypoints, m_curWayPoint);
+                CopyList(ref m_destructTowers, m_closestWaypoint.Object.GetComponent<WayPoint>().GetTowerList);
+                m_closestTower = GetClosestObject(m_destructTowers, m_curTower);
+
+                m_curWayPoint = m_closestWaypoint.Object;
+                m_curTower = m_closestTower.Object;
 
                 if (m_destructTowers.Count > 0)
                     towerDamagable = m_curTower.GetComponent<IDamagable>();

@@ -58,6 +58,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -82,6 +88,7 @@
     <Compile Include="Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\Scripts\ItemSpawning.cs" />
     <Compile Include="Assets\Scripts\LoadingLevel.cs" />
+    <Compile Include="Assets\Scripts\MaxPlayersOnTower.cs" />
     <Compile Include="Assets\Scripts\Overlord.cs" />
     <Compile Include="Assets\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\StayInArena.cs" />
