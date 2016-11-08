@@ -9,17 +9,10 @@ public class AIMovement : MonoBehaviour {
     private List<GameObject> m_destructTowers;
     private List<GameObject> m_waypoints;
 
-    [SerializeField]
-    private float m_attackCoolSet;
-    private float m_attackCool;
-
-
-    [SerializeField]
-    private int m_attackDamageSet;
-    private int m_attackDamage;
-
     private NavMeshAgent m_enemyAgent;
     private Animator m_animator;
+
+    public EnemyStats m_enemyStats;
 
     IDamagable towerDamagable = null;
 
@@ -30,18 +23,22 @@ public class AIMovement : MonoBehaviour {
 
     void OnEnable() {
 
-        m_currentState = AiState.Searching;
         GameObject overlord = GameObject.FindGameObjectWithTag("OVERLORD");
+
         m_waypoints = new List<GameObject>(overlord.GetComponent<Overlord>().WayPoints);
         m_enemyAgent = GetComponent<NavMeshAgent>();
         m_animator = GetComponent<Animator>();
 
-        m_attackCool = m_attackCoolSet;
-        m_attackDamage = m_attackDamageSet;
+        m_enemyStats = GetComponent<EnemyStats>();
+
+        m_currentState = AiState.Searching;
     }
 
     void Update() {
         TheAiState();
+
+        if(m_enemyAgent.speed != m_enemyStats.m_speed)
+            m_enemyAgent.speed = m_enemyStats.m_speed;
     }
 
     void TheAiState() {
@@ -129,22 +126,22 @@ public class AIMovement : MonoBehaviour {
 
             m_animator.SetBool("isWalking", false);
             transform.LookAt(m_curTower.transform.position);
-            m_attackCool -= Time.deltaTime;
+            m_enemyStats.CoolDown -= Time.deltaTime;
 
             if (towerDamagable.GetHitPoints() <= 0) {
 
-                m_attackCool = m_attackCoolSet;
+                m_enemyStats.CoolDown = m_enemyStats.m_coolDownStart;
                 towerDamagable = null;
                 m_curTower = null;
                 m_currentState = AiState.Searching;
 
             }
 
-            if (m_attackCool < 0) {
+            if (m_enemyStats.CoolDown < 0) {
 
                 m_animator.SetTrigger("isTriggerPunch");
-                towerDamagable.TakeDamage(m_attackDamage);
-                m_attackCool = m_attackCoolSet;
+                towerDamagable.TakeDamage((int)m_enemyStats.m_strenght);
+                m_enemyStats.CoolDown = m_enemyStats.m_coolDownStart;
 
             }
         }
