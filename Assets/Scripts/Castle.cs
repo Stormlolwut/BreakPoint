@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class Castle : MonoBehaviour, IDamagable {
 
     private float m_health;
+    [SerializeField]
     private int m_maxHealth;
     private int m_upgrade;
 
@@ -21,13 +22,21 @@ public class Castle : MonoBehaviour, IDamagable {
 
 
     void Start() {
-        m_health = m_maxHealth = 1000;
+        m_health = m_maxHealth;
         m_overlordScript = m_overlord.gameObject.GetComponent<Overlord>();
         m_waypoints = m_overlord.GetComponent<Overlord>().WayPoints;
         AddToWayPoint();
     }
 
+    void HealthCircle() {
+        BuildCircleMesh bm = GetComponentInChildren<BuildCircleMesh>();
+        bm.GetComponent<MeshRenderer>().enabled = true;
+        float hp = (m_health / m_maxHealth * 100f);
+        bm.endAngle = hp / 100 * 360;
+    }
+
     void Update() {
+        HealthCircle();
         m_upgrade = m_maxHealth / 100 * m_upgrade;
         m_maxHealth = m_maxHealth + m_upgrade;
     }
@@ -54,6 +63,7 @@ public class Castle : MonoBehaviour, IDamagable {
 
     public float GetHitPoints() {
         if (m_health <= 0) {
+            closestWaypoint.GetComponent<WayPoint>().GetTowerList.Remove(gameObject);
             gameObject.SetActive(false);
             m_wavemenu.SetActive(false);
             m_buildmenu.SetActive(false);

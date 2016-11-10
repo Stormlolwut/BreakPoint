@@ -8,7 +8,7 @@ public class Overlord : MonoBehaviour {
     #region classVariables
 
     public bool m_waveProgress;
-    private bool m_canUpgrade;
+    private bool m_canUpgrade = true;
     private int m_waveNumber;
     private int m_waveMoney = 200;
     private int m_enemyTickets;
@@ -71,8 +71,6 @@ public class Overlord : MonoBehaviour {
     #endregion
     void Start() {
         m_waveTimer = m_waveTimerSet;
-
-        Debug.Log(Mathf.Log(1f, 2));
     }
     void Update() {
 
@@ -91,9 +89,13 @@ public class Overlord : MonoBehaviour {
 
         for (int i = 0; i < m_enemyTickets; i++) {
 
+            //Debug.Log("Enemy tickets: " + m_enemyTickets);
+
             foreach (EnemyTickets enemies in m_enemyTicket) {
 
-                if (enemies.m_ticketCosts < m_enemyTickets && m_destructEnemies.Count <= 20) {
+                int maxenemies = m_destructEnemies.Count;
+
+                if (enemies.m_ticketCosts < m_enemyTickets && maxenemies < 50) {
 
                     m_enemyTickets -= enemies.m_ticketCosts;
                     GameObject clone = Instantiate(enemies.m_spawnEnemy, spawnrange, spawnrotation) as GameObject;
@@ -105,10 +107,12 @@ public class Overlord : MonoBehaviour {
             }
             if (!m_canUpgrade)
                 UpgradeEnemy(m_enemyTickets);
-            Debug.Log("Enemy tickets: " + m_enemyTickets);
         }
         m_canUpgrade = true;
     }
+
+
+
 
     private void UpgradeEnemy(int tickets) {
         for (int i = 0; i < m_destructEnemies.Count; i++) {
@@ -138,10 +142,10 @@ public class Overlord : MonoBehaviour {
         m_audioSource.clip = m_audioClips[0];
         m_audioSource.Play();
         m_waveTimer = m_waveTimerSet;
-        EnemySpawner();
         m_waveNumber++;
         m_waveInfo.text = "WAVE: " + m_waveNumber.ToString();
-        m_enemyTickets = m_waveNumber * 5;
+        m_enemyTickets = (10 * m_waveNumber);
+        EnemySpawner();
         m_waveProgress = true;
 
     }

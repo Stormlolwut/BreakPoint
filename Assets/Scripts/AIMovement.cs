@@ -48,8 +48,6 @@ public class AIMovement : MonoBehaviour {
         switch (m_currentState) {
             case AiState.Searching:
 
-
-
                 m_closestWaypoint = GetClosestObject(m_waypoints, m_curWayPoint);
                 CopyList(ref m_destructTowers, m_closestWaypoint.Object.GetComponent<WayPoint>().GetTowerList);
                 m_closestTower = GetClosestObject(m_destructTowers, m_curTower);
