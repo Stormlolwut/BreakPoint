@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class AIMovement : MonoBehaviour {
+public class AIMovement : MonoBehaviour
+{
     #region classVariables
     private enum AiState { Searching, Chasing, Attacking }
     AiState m_currentState;
@@ -24,7 +25,8 @@ public class AIMovement : MonoBehaviour {
     #endregion
 
 
-    void OnEnable() {
+    void OnEnable()
+    {
 
         GameObject overlord = GameObject.FindGameObjectWithTag("OVERLORD");
 
@@ -37,15 +39,18 @@ public class AIMovement : MonoBehaviour {
         m_currentState = AiState.Searching;
     }
 
-    void Update() {
+    void Update()
+    {
         TheAiState();
         /*if(m_enemyAgent.speed != m_enemyStats.m_speed)
             m_enemyAgent.speed = m_enemyStats.m_speed;*/
     }
 
-    void TheAiState() {
+    void TheAiState()
+    {
 
-        switch (m_currentState) {
+        switch (m_currentState)
+        {
             case AiState.Searching:
 
                 m_closestWaypoint = GetClosestObject(m_waypoints, m_curWayPoint);
@@ -70,17 +75,20 @@ public class AIMovement : MonoBehaviour {
         }
     }
 
-    ObjectDistance GetClosestObject(List<GameObject> yourlist, GameObject yourobject) {
+    ObjectDistance GetClosestObject(List<GameObject> yourlist, GameObject yourobject)
+    {
 
         float closestDisSqr = Mathf.Infinity;
         Vector3 currentPos = transform.position;
 
-        foreach (GameObject potentialObject in yourlist) {
+        foreach (GameObject potentialObject in yourlist)
+        {
 
             Vector3 directionToTarget = potentialObject.transform.position - currentPos;
             float sqrRootToTarget = directionToTarget.sqrMagnitude;
 
-            if (sqrRootToTarget < closestDisSqr) {
+            if (sqrRootToTarget < closestDisSqr)
+            {
                 closestDisSqr = sqrRootToTarget;
                 yourobject = potentialObject;
             }
@@ -89,18 +97,21 @@ public class AIMovement : MonoBehaviour {
     }
 
 
-    void MoveToTarget() {
+    void MoveToTarget()
+    {
 
         float waypointdistance = Mathf.Infinity;
         float towerdistance = Mathf.Infinity;
 
-        if (m_destructTowers.Count > 0) {
+        if (m_destructTowers.Count > 0)
+        {
 
             towerdistance = Vector3.Distance(transform.position, m_curTower.transform.position);
             m_enemyAgent.SetDestination(m_curTower.transform.position);
 
         }
-        else {
+        else
+        {
 
             ObjectDistance waypoint = GetClosestObject(m_waypoints, m_curWayPoint);
             m_curWayPoint = waypoint.Object;
@@ -111,7 +122,8 @@ public class AIMovement : MonoBehaviour {
 
         m_animator.SetBool("isWalking", true);
 
-        if (waypointdistance < 4f) {
+        if (waypointdistance < 4f)
+        {
             m_waypoints.Remove(m_curWayPoint);
             m_curWayPoint = null;
             m_currentState = AiState.Searching;
@@ -122,15 +134,18 @@ public class AIMovement : MonoBehaviour {
 
     }
 
-    void AttackingTarget() {
+    void AttackingTarget()
+    {
 
-        if (m_curTower != null) {
+        if (m_curTower != null)
+        {
 
             m_animator.SetBool("isWalking", false);
             transform.LookAt(m_curTower.transform.position);
             m_enemyStats.CoolDown -= Time.deltaTime;
 
-            if (towerDamagable.GetHitPoints() <= 0) {
+            if (towerDamagable.GetHitPoints() <= 0)
+            {
 
                 m_enemyStats.CoolDown = m_enemyStats.m_coolDownStart;
                 towerDamagable = null;
@@ -139,7 +154,8 @@ public class AIMovement : MonoBehaviour {
 
             }
 
-            if (m_enemyStats.CoolDown < 0) {
+            if (m_enemyStats.CoolDown < 0)
+            {
 
                 m_animator.SetTrigger("isTriggerPunch");
                 towerDamagable.TakeDamage((int)m_enemyStats.m_strenght);
@@ -149,19 +165,23 @@ public class AIMovement : MonoBehaviour {
         }
     }
 
-    void CopyList(ref List<GameObject> list1, List<GameObject> list2) {
+    void CopyList(ref List<GameObject> list1, List<GameObject> list2)
+    {
         list1 = new List<GameObject>();
-        for (int i = 0; i < list2.Count; i++) {
+        for (int i = 0; i < list2.Count; i++)
+        {
             list1.Add(list2[i]);
         }
     }
 
-    private class ObjectDistance {
+    private class ObjectDistance
+    {
         private GameObject m_obj;
         private float m_dist;
         public GameObject Object { get { return m_obj; } }
         public float Distance { get { return m_dist; } }
-        public ObjectDistance(GameObject obj, float distance) {
+        public ObjectDistance(GameObject obj, float distance)
+        {
             m_obj = obj;
             m_dist = distance;
         }

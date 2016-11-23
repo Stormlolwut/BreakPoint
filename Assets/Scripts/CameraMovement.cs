@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraMovement : MonoBehaviour {
+public class CameraMovement : MonoBehaviour
+{
 
     private Vector3 m_moveDir;
     private Vector2 m_startPos;
@@ -15,21 +16,25 @@ public class CameraMovement : MonoBehaviour {
     private bool m_couldBeSwipe;
 
 
-    void Update() {
+    void Update()
+    {
         MoveCamera();
         //ZoomCamera();
         SwipeCamera();
     }
-    void MoveCamera() {
-#if UNITY_EDITOR
+    void MoveCamera()
+    {
+
         m_moveDir.x = Input.GetAxis("Horizontal");
         m_moveDir.y = Input.GetAxis("Vertical");
         m_moveDir = m_moveDir * m_movementSpeed * Time.deltaTime;
         transform.Translate(m_moveDir);
-#endif
+
     }
-    void SwipeCamera() {
-        if(Input.touchCount == 1  && GetComponent<FirstPerson>().m_infirstPerson == false) {
+    void SwipeCamera()
+    {
+        if (Input.touchCount == 1 && GetComponent<FirstPerson>().m_infirstPerson == false)
+        {
             Touch touchZero = Input.GetTouch(0);
             Vector2 touchZeroPos = touchZero.deltaPosition;
             Vector2 touchNormalized = touchZeroPos.normalized;
@@ -38,7 +43,8 @@ public class CameraMovement : MonoBehaviour {
     }
 
 
-    void ZoomCamera() {
+    void ZoomCamera()
+    {
 #if UNITY_ANDROID
         if (Input.touchCount == 2 && GetComponent<FirstPerson>().m_infirstPerson == false) {
             Touch touchZero = Input.GetTouch(0);
@@ -55,6 +61,6 @@ public class CameraMovement : MonoBehaviour {
             Camera.main.fieldOfView += deltaMagnituedeDiff * m_zoomSpeed;
             Camera.main.fieldOfView = Mathf.Clamp(Camera.main.transform.position.y, 0.1f, 179.9f);
 #endif
-        }
     }
 }
+

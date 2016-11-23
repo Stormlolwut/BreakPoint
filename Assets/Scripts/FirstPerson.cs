@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class FirstPerson : MonoBehaviour {
+public class FirstPerson : MonoBehaviour
+{
 
     [SerializeField]
     private int m_damageUp;
@@ -25,59 +26,69 @@ public class FirstPerson : MonoBehaviour {
     public bool m_infirstPerson;
     private bool m_inTopVieuw;
 
-    void Start() {
+    void Start()
+    {
         m_originalPos = transform.position;
         m_originalRot = transform.rotation;
     }
-    void Update() {
+    void Update()
+    {
         SelectTower();
         FirstPersonVieuw();
         if (m_curEnemy != null)
             transform.LookAt(m_curEnemy.transform.position);
         CopyList(ref m_destructEnemies, m_overlord.GetComponent<Overlord>().DestructEnemies);
     }
-    void SelectTower() {
-#if UNITY_EDITOR
+    void SelectTower()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
         Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
 #endif
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Spawnable" && Input.GetMouseButtonDown(0) && m_overlord.GetComponent<Overlord>().m_waveProgress == true) {
+        if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Spawnable" && Input.GetMouseButtonDown(0) && m_overlord.GetComponent<Overlord>().m_waveProgress == true)
+        {
             transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y + 15, hit.transform.position.z);
             m_infirstPerson = true;
             m_inTopVieuw = false;
         }
-        if (m_overlord.GetComponent<Overlord>().m_waveProgress == false) {
+        if (m_overlord.GetComponent<Overlord>().m_waveProgress == false)
+        {
             m_infirstPerson = false;
         }
     }
-    void FirstPersonVieuw() {
-        if (m_infirstPerson && !m_inTopVieuw) {
+    void FirstPersonVieuw()
+    {
+        if (m_infirstPerson && !m_inTopVieuw)
+        {
             m_wavemenu.SetActive(false);
             m_buildmenu.SetActive(false);
             m_firstmenu.SetActive(true);
-            if (m_curEnemy == null) {
+            if (m_curEnemy == null)
+            {
                 m_closePos = Mathf.Infinity;
-                for (int i = 0; i < m_destructEnemies.Count; i++) {
-                    if (m_destructEnemies[i] != null && m_closePos > Vector3.Distance(transform.position, m_destructEnemies[i].transform.position)) {
+                for (int i = 0; i < m_destructEnemies.Count; i++)
+                {
+                    if (m_destructEnemies[i] != null && m_closePos > Vector3.Distance(transform.position, m_destructEnemies[i].transform.position))
+                    {
                         m_closePos = Vector3.Distance(transform.position, m_destructEnemies[i].transform.position);
                         m_curEnemy = m_destructEnemies[i];
                     }
                 }
             }
-#if UNITY_EDITOR
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
 #endif
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, m_enemyLayer) && hit.collider.gameObject.layer == 8 && Input.GetMouseButtonDown(0)) {
+            if (Physics.Raycast(ray, out hit, m_enemyLayer) && hit.collider.gameObject.layer == 8 && Input.GetMouseButtonDown(0))
+            {
                 hit.collider.GetComponent<IDamagable>().GetHitPoints();
                 hit.collider.GetComponent<IDamagable>().TakeDamage(m_damageUp);
             }
         }
-        if (!m_infirstPerson && !m_inTopVieuw) {
+        if (!m_infirstPerson && !m_inTopVieuw)
+        {
             m_curEnemy = null;
             m_firstmenu.SetActive(false);
             m_wavemenu.SetActive(true);
@@ -87,7 +98,8 @@ public class FirstPerson : MonoBehaviour {
             transform.rotation = m_originalRot;
         }
     }
-   public void GoTopVieuw() {
+    public void GoTopVieuw()
+    {
         m_curEnemy = null;
         m_firstmenu.SetActive(false);
         m_wavemenu.SetActive(true);
@@ -96,9 +108,11 @@ public class FirstPerson : MonoBehaviour {
         transform.position = m_originalPos;
         transform.rotation = m_originalRot;
     }
-    void CopyList(ref List<GameObject> list1, List<GameObject> list2) {
+    void CopyList(ref List<GameObject> list1, List<GameObject> list2)
+    {
         list1 = new List<GameObject>();
-        for (int i = 0; i < list2.Count; i++) {
+        for (int i = 0; i < list2.Count; i++)
+        {
             list1.Add(list2[i]);
         }
     }
